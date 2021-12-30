@@ -12,15 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchUserByName = void 0;
 const discord_js_1 = require("discord.js");
 const dotenv_1 = __importDefault(require("dotenv"));
-const node_fetch_1 = __importDefault(require("node-fetch"));
 dotenv_1.default.config();
 const applicationRole = "924370022414053436";
 const applicationChannel = "924137050100338708";
 const citizenRole = "867441845306785872";
 const guildColor = "#0c5fb0";
+const guildId = "867376142334951445";
 const client = new discord_js_1.Client({
     intents: [
         discord_js_1.Intents.FLAGS.GUILDS,
@@ -32,7 +31,6 @@ const client = new discord_js_1.Client({
 });
 client.once("ready", () => {
     console.log("bot online");
-    const guildId = "867376142334951445";
     const guild = client.guilds.cache.get(guildId);
     if (!guild)
         return;
@@ -106,7 +104,12 @@ client.on("messageReactionAdd", (reaction, user) => __awaiter(void 0, void 0, vo
     if (reaction.emoji.name === "✅") {
         const guild = reaction.message.guild;
         const applicant = reaction.message.embeds[0].author;
-        const match = yield (0, exports.fetchUserByName)(applicant.name);
+        // const match = await fetchUserByName(applicant.name);
+        const memberList = yield guild.members.search({
+            query: applicant.name.slice(0, -5),
+            cache: true,
+        });
+        const match = memberList.find(({ user }) => `${user.username}#${user.discriminator}` === applicant.name);
         if (match) {
             const member = yield guild.members.fetch(match.user.id);
             member.roles.add(citizenRole);
@@ -115,19 +118,3 @@ client.on("messageReactionAdd", (reaction, user) => __awaiter(void 0, void 0, vo
     }
 }));
 client.login(process.env.BOT_TOKEN);
-const fetchUserByName = (discordName) => __awaiter(void 0, void 0, void 0, function* () {
-    const queryName = discordName.slice(0, -5);
-    const response = yield (0, node_fetch_1.default)(`https://discord.com/api/guilds/${process.env.DISCORD_GUILD_ID}/members/search?query=${queryName}`, {
-        headers: { Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}` },
-    });
-    const data = yield response.json();
-    console.log(data);
-    if (!data)
-        return null;
-    // const match = data.find(({ user }) => {
-    //   return `${user.username}#${user.discriminator}` === discordName;
-    // });
-    // if (match) return match;
-    return null;
-});
-exports.fetchUserByName = fetchUserByName;
