@@ -6,9 +6,6 @@ import {
   MessageButton,
   MessageEmbed,
 } from "discord.js";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const applicationRole = "924370022414053436";
 const applicationChannel = "924137050100338708";
