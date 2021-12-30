@@ -1,0 +1,20 @@
+{
+  "name": "lunaris-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc -w --skipLibCheck",
+    "serve": "nodemon index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^13.5.0",
+    "dotenv": "^10.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "typescript": "^4.5.4"
+  }
+}
