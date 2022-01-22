@@ -111,8 +111,8 @@ client.on("messageReactionAdd", async (reaction, user) => {
   if (reaction.emoji.name === "✅") {
     const guild = reaction.message.guild;
     const applicant = reaction.message.embeds[0].author;
+    if (!guild || !applicant) return;
 
-    // const match = await fetchUserByName(applicant.name);
     const memberList = await guild.members.search({
       query: applicant.name.slice(0, -5),
       cache: true,
